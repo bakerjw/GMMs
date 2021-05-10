@@ -30,8 +30,8 @@ function [median, sigma, period1] = aga_2016_subduction(T,rup,site,sub_ind,F_fab
 %   F_faba       = 0 for forearc or unknown sites
 %                = 1 for backarc sites
 % OUTPUT
-%   median  = vector of median response spectral ordinates (g)
-%   sigma   = vector of logarithmic standard deviation
+%   median          = vector of median response spectral ordinates (g)
+%   sigma           = vector of logarithmic standard deviation
 %   period1         = periods for which the median and sigma values are
 %                     provided. If T = 1000, then period1 = the full set of
 %                     available periods. Else period1 = T

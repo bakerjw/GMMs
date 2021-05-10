@@ -8,7 +8,7 @@ function [median,sigma, period1] = a_2015_active(T,rup)
 %
 % updated 4/14/2015 to change default h_eff from Yenier and Atkinson (2014)
 % to alternate h_eff proposed in Atkinson (2015) based on personal 
-% communication with Atkinson.
+% communication with Prof. Atkinson.
 %
 % Atkinson 2015 GMPE, as defined in the following document. Note that 
 % output standard deviations are converted to natural log values from
@@ -18,7 +18,8 @@ function [median,sigma, period1] = a_2015_active(T,rup)
 % Atkinson, G. M. (2015). “Ground-Motion Prediction Equation for 
 % Small-to-Moderate Events at Short Hypocentral Distances, with Application 
 % to Induced-Seismicity Hazards.” Bulletin of the Seismological Society of 
-% America.
+% America. 105 (2A): 981-992. https://doi.org/10.1785/0120140142
+
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INPUT
@@ -38,6 +39,10 @@ function [median,sigma, period1] = a_2015_active(T,rup)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if isempty(rup.Rhyp)
     disp("Missing Rhyp value")
+end
+
+if rup.M > 6
+      disp("Warning, magnitedu is larger than approprite for this model")  
 end
 
 % % Coefficients

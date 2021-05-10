@@ -34,7 +34,7 @@ function [median, sigma, period1] = cb_2014_active(T,rup,sitevar)
 %       Zhyp          = Hypocentral depth of the earthquake measured from sea level
 %       delta         = average dip of the rupture place (degree)
 %       lambda        = rake angle (degree) - average angle of slip measured in
-%                       the plance of rupture
+%                       the plane of rupture
 %       Fhw           = hanging wall effect
 %                     = 1 for including
 %                     = 0 for excluding
