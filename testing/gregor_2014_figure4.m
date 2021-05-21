@@ -7,8 +7,14 @@
 %   i_2014_active
 % Created by Emily Mongold, 12/18/20
 %
-clear
-clc; addpath('../gmms/')
+clear rup
+clear site
+clc; 
+addpath('../gmms/')
+addpath('../')
+
+% call a helper script to build arrays of GMM names and plotting parameters
+specify_gmms
 %% Setting rupture and site object values
 % Rupture inputs
 M = 7;  
@@ -36,34 +42,31 @@ Z10 = [];       % Values change with Vs30: left empty so each GMM fills in accor
 Zbot = 15;      
 region = 0;     % 0 for global
      
-rup = rup(M,R,Rrup,Rjb,Rhyp,Rx,Ry0,HW,AS,Ztor,Zhyp,h_eff,W,delta,lambda);
-site = site(is_soil,Vs30,fvs30,Z25,Z10,Zbot,region);
+rupt = rup(M,R,Rrup,Rjb,Rhyp,Rx,Ry0,HW,AS,Ztor,Zhyp,h_eff,W,delta,lambda);
+sitevar = site(is_soil,Vs30,fvs30,Z25,Z10,Zbot,region);
 
 period = [0 0.2 1 3];  % Periods for the four plots
 %% Function Calls
-medianASK = zeros(4,length(Vs30));
-medianBSSA = zeros(4,length(Vs30));
-medianCB = zeros(4,length(Vs30));
-medianCY = zeros(4,length(Vs30));
-medianI = zeros(4,length(Vs30));
+medianvec = cell(1,length(nga2west));
 for j = 1:length(period)
     T = period(j);
     for n = 1:length(Vs30)
-        site.Vs30 = Vs30(n);
-        [medianASK(j,n),~,~] = ask_2014_active(T,rup,site);
-        [medianBSSA(j,n),~,~] = bssa_2014_active(T,rup,site);
-        site.Vs30 = Vs30(n);
-        [medianCB(j,n),~,~] = cb_2014_active(T,rup,site);
-        [medianCY(j,n),~,~] = cy_2014_active(T,rup,site);
-        if Vs30(n) >= 450
-            site.Vs30 = Vs30(n);
-            [medianI(j,n),~,~] = i_2014_active(T,rup,site);
+        sitevar.Vs30 = Vs30(n);
+        for i = 1:length(nga2west)
+            if i ~=5
+            [medianvec{i}(j,n),~,~] = active_gmms(T,rupt,sitevar,gmm_name{nga2west(i)});
+            else
+                if Vs30(n) >= 450
+                    [medianvec{i}(j,n),~,~] = active_gmms(T,rupt,sitevar,gmm_name{nga2west(i)});
+                end
+            end
         end
     end
 end
 
 %% Figure 4
 limits = [100 2000 0.001 0.1];
+gregor_color = ['r','g','b','m','c'];
 y_labels = ["PGA [g]";"PSA [g]";"PSA [g]";"PSA [g]"];
 titles = ["PGA";"T = 0.2s";"T = 1.0s";"T = 3.0s"];
 
@@ -76,15 +79,23 @@ for n = 1:4
         limits = [100 2000 0.01 1];
     end
     subplot(2,2,n)
-    loglog(Vs30,medianASK(n,:),'-r',Vs30, medianBSSA(n,:),'-g',Vs30, medianCB(n,:),'-b',Vs30, medianCY(n,:),'-m',Vs30, medianI(n,:),'-c')
+        for i = 1:length(nga2west)
+            loglog(Vs30,medianvec{i}(n,:),'color',gregor_color(i));
+            hold on
+        end
     grid on 
     axis(limits)
     xlabel('Vs30')
     ylabel(y_labels(n))
     title(titles(n))
     if n == 4
-        legend('ASK','BSSA','CB','CY','I','Location','Northeast')
+        legend(gmm_name{nga2west},'Location','NorthEast','Interpreter','none')
     end
 end
 %% Save Figure
-saveas(gcf,'../figures/gregor4.jpg')
+saveas(gcf,'../figures/gregor4new.jpg')
+% save("ASK_SAs.mat","medianASK2")
+% save("BSSA_SAs.mat","medianBSSA2")
+% save("CB_SAs.mat","medianCB2")
+% save("CY_SAs.mat","medianCY2")
+% save("I_SAs.mat","medianI2")

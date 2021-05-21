@@ -49,7 +49,7 @@ for m = 1:length(sub_ind)
 end
 %% Create Figure
 limits = [0.01 10 0.01 2];
-titles = ["PSA versus T, Interface" "PSA versus T, Intraslab"];
+titles = ["SA versus T, Interface" "SA versus T, Intraslab"];
 figure('Name','Subduction Figure 4','NumberTitle','off','Position',[10 10 600 400])
 for m = 1:length(sub_ind)
     subplot(1,2,m)
@@ -57,7 +57,7 @@ for m = 1:length(sub_ind)
     grid on 
     axis(limits)
     xlabel('Period [sec]')
-    ylabel('PSA [g]')
+    ylabel('SA [g]')
     title(titles(m))
     if m == 2
         legend('ab2003','aga2016','ycsh1997','gswy2002','z2006','Location','Southwest')

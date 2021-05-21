@@ -8,14 +8,14 @@ addpath('../gmms/')
 % Rupture inputs
 M = [5 6 7 8];           
 R = 1:1:250;        % Used in as_1996_duration
-Rrup = 1:1:250;     % Used in ab_2006_stable and c_ and as_1997_vert
+Rrup = 1:1:250;     % Used in ab_2006_stable and c_ and as_1997_vert, as_2016_duration and bsa_2009_duration
 Rjb = 1:1:250;      % Used in sp_2016_stable
 Rhyp = [];      
 Rx = [];        
 Ry0 = [];       
 HW = 0;             % No hanging wall, used by as_1997_vert
 AS = [];
-Ztor = [];       
+Ztor = 0;           % Used in bsa_2009_duration
 Zhyp = [];
 h_eff = [];
 W = [];
@@ -24,57 +24,115 @@ lambda = 0;         % Strike-slip, used by vertical models
 
 % Site inputs
 is_soil = 0;        % Used by as_1996_duration, c_ and as_1997_vert
-Vs30 = 760;         % Used by ab_2006_stable
+Vs30 = [760 270];         % Used by ab_2006_stable, as_2016_duration, and bsa_2009_duration
 fvs30 = [];          
 Z25 = [];       
-Z10 = [];          
+Z10 = 0.05;         % Used in as_2016_duration
 Zbot = [];      
-region = [];         
+region = 1;         % Used in as_2016_duration
 
 % Create rupture and site objects
 rup = rup([],[],[],[],Rhyp,Rx,Ry0,HW,AS,Ztor,Zhyp,h_eff,W,delta,lambda);
 site = site(is_soil,Vs30,fvs30,Z25,Z10,Zbot,region);
 
-input_durations = [1 2 3 4];    % Used by as_1996_duration
-D = 80;                         % Used by c_1997_vert
+input_durations = [1 3 2 4 5];      % Used by as_1996_duration
+D = 80;                             % Used by c_1997_vert
 T = 1.0; 
 
-%% Creation of Duration Figure
-median = zeros(length(R),length(M),length(input_durations));
-for n = 1:length(M)
-    rup.M = M(n);
-    for m = 1:length(input_durations)
-        dur_type = input_durations(m);
-        for j = 1:length(R)
-            rup.R = R(j);
-            [median(j,n,m), sigma] = as_1996_duration(rup, site, dur_type);
+%% Creation of Duration Figures
+% median = zeros(3,length(R),length(M),length(input_durations));
+% sigma = zeros(3,length(R),length(M),length(input_durations));
+% med_vert = zeros(3,length(R),length(M),length(input_durations));
+% sigma_vert = zeros(3,length(R),length(M),length(input_durations));
+% med_2080 = zeros(3,length(R),length(M),length(input_durations));
+% sigma_2080 = zeros(3,length(R),length(M),length(input_durations));
+for i = 1:length(Vs30)
+    site.Vs30 = Vs30(i); 
+    for n = 1:length(M)
+        rup.M = M(n);
+        for m = 1:length(input_durations)
+            dur_type = input_durations(m);
+            if dur_type == 1 || dur_type == 3
+                for j = 1:length(R)
+                    rup.R = R(j); rup.Rrup = R(j);
+                    [median(1,j,n,m,i), sigma(1,j,n,m,i)] = as_1996_duration(rup, site, dur_type);
+                    [median(2,j,n,m,i), sigma(2,j,n,m,i),~,~] = as_2016_duration(rup, site, dur_type);
+                    [median(3,j,n,m,i), sigma(3,j,n,m,i),~,~] = bsa_2009_duration(rup, site, dur_type);
+                end
+            elseif dur_type == 2 || dur_type == 4
+                for j = 1:length(R)
+                    rup.R = R(j); rup.Rrup = R(j);
+                    [med_vert(j,n,m-2,i), sigma_vert(j,n,m-2,i)] = as_2016_duration(rup, site, dur_type);
+                end
+            elseif dur_type == 5
+                for j = 1:length(R)
+                    rup.R = R(j);rup.Rrup = R(j);
+                    [med_2080(j,n,m-4,i), sigma_2080(j,n,m-4,i)] = as_2016_duration(rup, site, dur_type);
+                end
+            end
         end
     end
 end
-% Create Duration Figure
+% Create Duration Figure 1
+color1 = [0,0.4470,0.7410]; color2 = [0.85,0.3250,0.0980]; 
+color3 = [0.929,0.694,0.1250]; color4 = [0.494,0.184,0.556]; 
 % limits = [1 250 0.001 1];
 figure('Name','Significant Durations','NumberTitle','off','Position',[10 10 600 600])
 titles = ["M5.0","M6.0","M7.0","M8.0"];
 for n = 1:length(M)
     subplot(3,2,n)
-    plot(R,median(:,n,1),R,median(:,n,2),R,median(:,n,3),R,median(:,n,4),'LineWidth',1);
+    plot(R,med_vert(:,n,1,1),'-','color',color1,'Linewidth',1);
+    hold on
+    plot(R,med_vert(:,n,2,1),'--','color',color1,'Linewidth',1);
     title(titles(n));
     grid on 
     % axis(limits)
     xlabel('Distance [km]')
     ylabel('Median Duration [s]')
+    %sgtitle('Vertical Significant Durations from as1996')
 end
-lgd = legend("5-75% horizontal significant duration","5-75% vertical significant duration","5-95% horizontal significant duration","5-95% vertical significant duration","Location","southoutside");
+lgd = legend("5-75% vertical duration","5-95% vertical duration","Location","southoutside");
 hL = subplot(3,2,5:6);
 posL = get(hL,'position');
 set(lgd,'position',posL);
 axis(hL,'off');
 hold off
 % Save Figure
-saveas(gcf,'../figures/Duration Figure.jpg')
+saveas(gcf,'../figures/Duration Figure 1.jpg')
+
+% Create Duration Figure 2
+figure('Name','Significant Durations','NumberTitle','off','Position',[10 10 600 600])
+titles = ["M5.0, Vs30 = 760m/s","M5.0, Vs30 = 270m/s","M7.0, Vs30 = 760m/s","M7.0, Vs30 = 270m/s"];
+for n = [1 3]
+    for i = 1:length(Vs30)
+        subplot(3,2,(n+i-1))
+        plot(R,median(1,:,n,1,i),'-','color',color1,'Linewidth',1);
+        hold on
+        plot(R,median(1,:,n,2,i),'--','color',color1,'Linewidth',1);
+        plot(R,median(2,:,n,1,i),'-','color',color2,'Linewidth',1);
+        plot(R,median(2,:,n,2,i),'--','color',color2,'Linewidth',1);
+        plot(R,median(3,:,n,1,i),'-','color',color3,'Linewidth',1);
+        plot(R,median(3,:,n,2,i),'--','color',color3,'Linewidth',1);
+
+        title(titles(n+i-1));
+        grid on 
+        xlabel('Distance [km]')
+        ylabel('Median Duration [s]')
+    end
+end
+lgd = legend("5-75% as1996","5-95% as1996","5-75% as2016","5-95% as2016","5-75% bsa2009","5-95% bsa2009","Location","southoutside");
+hL = subplot(3,2,5:6);
+posL = get(hL,'position');
+set(lgd,'position',posL);
+axis(hL,'off');
+hold off
+% Save Figure
+saveas(gcf,'../figures/Duration Figure 2.jpg')
 
 %% Creation of Vertical Figures
 median = zeros(length(Rrup),length(M),2);
+site.Vs30 = 760; 
+M = [5 6 7 8]; 
 for n = 1:length(M)
     rup.M = M(n);
     for j = 1:length(Rrup)
@@ -94,7 +152,7 @@ for n = 1:length(M)
     grid on
     axis(limits)
     xlabel('Distance [km]')
-    ylabel('PSA [g]')
+    ylabel('SA [g]')
     if n == 4
         legend("as1997","c1997","Location","NorthEast");
     end
@@ -125,7 +183,7 @@ for n = 1:length(M)
     grid on 
     axis(limits)
     xlabel('Period [s]')
-    ylabel('PSA [g]')
+    ylabel('SA [g]')
     if n == 4
         legend("as1997","c1997","Location","NorthEast");
     end

@@ -39,7 +39,7 @@ MS = 0;             % does not include magnitude-squared term
 Zl = 0;             % for general
 sub_ind = [0 1];    % for interface and intraslab
 F_faba = 1;         % for forearc or unknown sites
-T =1;               % PSA calculation
+T =1;               % SA calculation
 rjb_vec = 1:1:250;
 %% Function Calls
 medianvec = zeros(5,length(rjb_vec));
@@ -58,7 +58,7 @@ for n = 1:length(rjb_vec)
 end
 %% Create Figure
 limits = [1 250 0.001 1];
-titles = ["PGA versus Rjb, M6.0 Interface" "PGA versus Rjb, M6.0 Intraslab"];
+titles = ["SA versus Rjb, M6.0 Interface" "SA versus Rjb, M6.0 Intraslab"];
 figure('Name','Subduction Figure 2','NumberTitle','off','Position',[10 10 600 400])
 for n = 1:2
     subplot(1,2,n)
@@ -66,7 +66,7 @@ for n = 1:2
     grid on 
     axis(limits)
     xlabel('RJB Distance [km]')
-    ylabel('PGA [g]')
+    ylabel('SA [g]')
     title(titles(n))
     if n == 2
         legend('ab2003','aga2016','ycsh1997','gswy2002','z2006','Location','Southwest')

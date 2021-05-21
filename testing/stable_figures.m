@@ -59,7 +59,7 @@ for n = 1:length(M)
     grid on
     axis(limits)
     xlabel('Distance [km]')
-    ylabel('PSA [g]')
+    ylabel('SA [g]')
     if n == 4
         legend("ab2006","sp2016","Location","NorthEast");
     end
@@ -90,7 +90,7 @@ for n = 1:length(M)
     grid on
     axis(limits)
     xlabel('Period [s]')
-    ylabel('PSA [g]')
+    ylabel('SA [g]')
     if n == 4
         legend("ab2006","sp2016","Location","NorthEast");
     end

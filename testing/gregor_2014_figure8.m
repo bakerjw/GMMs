@@ -7,8 +7,14 @@
 %   i_2014_active
 % Created by Emily Mongold, 12/18/20
 %
-clear
-clc; addpath('../gmms/')
+clear rup
+clear site
+clc; 
+addpath('../gmms/')
+addpath('../')
+
+% call a helper script to build arrays of GMM names and plotting parameters
+specify_gmms
 %% Setting rupture and site object values
 % Rupture inputs
 M = [5 6 7 8];           
@@ -32,52 +38,46 @@ is_soil = [];       % Not used in these models
 Vs30 = 760;
 fvs30 = 0;          % 0 for inferred and 1 for measured
 Z25 = 1.9826;       % Used in CB model 
-Z10 = 0;            % Used in BSSA model
-Z10_cy = 0.4794;     
-Z10_ask = 0.4704;
+Z10 = [0.4704 0 0 0.4794 0];    % Values corresponding with the 5 models, 0 if not used (CB and I)
 Zbot = 10;      
 region = 0;         % = 0 for global
 
 
 % Create rupture and site objects
-rup_cy = rup([],R,Rrup,Rjb,Rhyp,Rx,Ry0,HW,AS,[],Zhyp,h_eff,W,delta,lambda);
-rup = rup([],R,Rrup,Rjb,Rhyp,Rx,Ry0,HW,AS,[],Zhyp,h_eff,W,delta,lambda);
-site_cy = site(is_soil,Vs30,fvs30,Z25,Z10_cy,Zbot,region);
-site_ask = site(is_soil,Vs30,fvs30,Z25,Z10_ask,Zbot,region);
-site = site(is_soil,Vs30,fvs30,Z25,Z10,Zbot,region);
+rupt = rup([],R,Rrup,Rjb,Rhyp,Rx,Ry0,HW,AS,[],Zhyp,h_eff,W,delta,lambda);
+sitevar = site(is_soil,Vs30,fvs30,Z25,[],Zbot,region);
 
 T_vec = 0.01:0.01:10;  % Independent variable
 %% Function Calls
-medianASK = zeros(4,length(T_vec));
-medianBSSA = zeros(4,length(T_vec));
-medianCB = zeros(4,length(T_vec));
-medianCY = zeros(4,length(T_vec));
-medianI = zeros(4,length(T_vec));
+medianvec = cell(1,length(nga2west));
 for j = 1:4
-    rup.M = M(j); rup_cy.M = M(j);
-    rup.Ztor = Ztor(j); rup_cy.Ztor = Ztor(j);
+    rupt.M = M(j);
+    rupt.Ztor = Ztor(j); 
     for n = 1:length(T_vec)
-        [medianASK(j,n),~,~] = ask_2014_active(T_vec(n),rup,site_ask);
-        [medianBSSA(j,n),~,~] = bssa_2014_active(T_vec(n),rup,site);
-        [medianCB(j,n),~,~] = cb_2014_active(T_vec(n),rup,site);
-        [medianCY(j,n),~,~] = cy_2014_active(T_vec(n),rup_cy,site_cy);
-        [medianI(j,n),~,~] = i_2014_active(T_vec(n),rup,site);
+        for i = 1:length(nga2west)
+            sitevar.Z10 = Z10(i);
+            [medianvec{i}(j,n),~,~] = active_gmms(T_vec(n),rupt,sitevar,gmm_name{nga2west(i)});
+        end
     end
 end
 %% Figure 8
 limits = [0.01 10 0.001 1];
+gregor_color = ['r','g','b','m','c'];
 titles = ["Mag = 5.0";"Mag = 6.0";"Mag = 7.0";"Mag = 8.0"];
 figure('Name','Gregor Figure 8','Position',[0 0 600 900],'NumberTitle','off')
 for n = 1:4
     subplot(2,2,n)
-    loglog(T_vec, medianASK(n,:),'-r',T_vec, medianBSSA(n,:),'-g',T_vec, medianCB(n,:),'-b',T_vec, medianCY(n,:),'-m',T_vec, medianI(n,:),'-c')
+    for i = 1:length(nga2west)
+        loglog(T_vec,medianvec{i}(n,:),'color',gregor_color(i));
+        hold on
+    end
     grid on 
     axis(limits)
     xlabel('Period [sec]')
     ylabel('PSA [g]')
     title(titles(n))
     if n == 3
-        legend('ASK','BSSA','CB','CY','I','Location','Southwest')
+        legend(gmm_name{nga2west},'Location','Southwest','Interpreter','none')
     end
 end
 %% Save Figure

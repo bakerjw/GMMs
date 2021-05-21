@@ -39,7 +39,7 @@ MS = 0;         % does not include magnitude-squared term
 Zl = 0;         % for general
 sub_ind = [0 1];% for interface and intraslab
 F_faba = 0;     % for forearc or unknown sites
-T =1;           % PSA calculation
+T =1;           % SA calculation
 %% Function Calls
 medianvec = zeros(5,length(M));
 for n = 1:length(M)
@@ -54,7 +54,7 @@ for n = 1:length(M)
 end
 %% Create Figure
 limits = [4 8 0.001 1];
-titles = ["PGA versus M, Intraslab" "PGA versus M, Intraslab"];
+titles = ["SA versus M, Intraslab" "SA versus M, Intraslab"];
 figure('Name','Subduction Figure 3','NumberTitle','off','Position',[10 10 600 400])
 for m = 1:2
     subplot(1,2,m)
@@ -62,7 +62,7 @@ for m = 1:2
     grid on 
     axis(limits)
     xlabel('Magnitude')
-    ylabel('PGA [g]')
+    ylabel('SA [g]')
     title(titles(m))
     if m ==2
         legend('ab2003','aga2016','ycsh1997','gswy2002','z2006','Location','Northwest')
