@@ -65,7 +65,7 @@ for j=1:length(tStar)
     axis([0.01 10 0 1])
     set(gca, 'xtick', 10.^[-2:1])
     set(gca,'xticklabel', [0.01 0.1 1 10])
-    xlabel('T_1 (s)');
+    xlabel('T_1 [s]');
     ylabel('\rho', 'FontSize', 9);
     text(-0.20,-0.18, subLabel{j} ,'Units', 'Normalized', 'VerticalAlignment', 'Top')
         
@@ -107,8 +107,8 @@ for i = 1:length(rho)
     set(gca,'YTick',[0.01;0.1;1;10])
     set(gca,'XTickLabel',[0.01;0.1;1;10])
     set(gca,'YTickLabel',[0.01;0.1;1;10])
-    xlabel('T_1', 'fontsize', labelSize);
-    ylabel('T_2', 'fontsize', labelSize);
+    xlabel('T_1 [s]', 'fontsize', labelSize);
+    ylabel('T_2 [s]', 'fontsize', labelSize);
     title(corr_name{i}, 'fontsize', labelSize, 'interpreter', 'none');
     set(gca, 'fontsize', labelSize)
     axis square

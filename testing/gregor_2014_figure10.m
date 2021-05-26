@@ -9,6 +9,9 @@
 %
 clear
 clc; addpath('../gmms/')
+
+% call a helper script to build arrays of GMM names and plotting parameters
+specify_gmms
 %% Setting rupture and site object values
 % Rupture inputs
 M = [5 7];           
@@ -69,8 +72,16 @@ for n = 1:2
     ylabel('Sigma [Ln Units]')
     title(titles(n))
     if n == 2
-        legend('ASK','BSSA','CB','CY','I','Location','Southeast')
+        legend(gmm_name{nga2west},'Location','Southeast','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 3]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 3]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor10new.jpg')
+saveas(gcf,'../figures/gregor10.pdf')

@@ -63,5 +63,13 @@ for m = 1:length(sub_ind)
         legend('ab2003','aga2016','ycsh1997','gswy2002','z2006','Location','Southwest')
     end
 end
+
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 4]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+
 %% Save Figure
-saveas(gcf,'../figures/Subduction Figure 4.jpg')
+saveas(gcf,'../figures/Subduction Figure 4.pdf')

@@ -72,7 +72,14 @@ axis(limits)
 xlabel('R_{JB} Distance [km]')
 ylabel('SA [g]')
 title("SA(1s) versus R_{JB} Distance for a M6.0 Earthquake")
-legend(gmm_name,'Location','Southwest', 'Interpreter', 'none')
+legend(gmm_name,'Location','Southwest', 'Interpreter', 'none', 'fontsize', 7)
+
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [4.5 4]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 4.5 4]);
 
 %% Save Figure
-saveas(gcf,'../figures/ActiveFigure2new.jpg')
+saveas(gcf,'../figures/Active Figure 2.pdf')

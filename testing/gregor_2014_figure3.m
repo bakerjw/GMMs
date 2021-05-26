@@ -94,5 +94,12 @@ for n = 1:4
     end
 end
 
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor3.jpg')
+saveas(gcf,'../figures/gregor3.pdf')

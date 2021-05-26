@@ -9,6 +9,9 @@
 %
 clear
 clc; addpath('../gmms/')
+% call a helper script to build arrays of GMM names and plotting parameters
+specify_gmms
+
 %% Setting rupture and site object values
 % Rupture inputs
 M = 3:0.5:8.5;           
@@ -52,12 +55,12 @@ sigmaCY2 = zeros(2,length(M));
 for j = 1:2
     for n = 1:length(M)
         rupt.M = M(n); rup_cy.M = M(n);
-        [~,sigmaASK2(j,n),~] = active_caller(T_vec(j),rupt,sitevar,'ask_2014');
-        [~,sigmaBSSA2(j,n),~] = active_caller(T_vec(j),rupt,sitevar,'bssa_2014');
-        [~,sigmaCB2(j,n),~] = active_caller(T_vec(j),rupt,sitevar,'cb_2014');
-        [~,sigmaCY2(j,n),~] = active_caller(T_vec(j),rupt,sitevar,'cy_2014');
+        [~,sigmaASK2(j,n),~] = active_gmms(T_vec(j),rupt,sitevar,'ask_2014');
+        [~,sigmaBSSA2(j,n),~] = active_gmms(T_vec(j),rupt,sitevar,'bssa_2014');
+        [~,sigmaCB2(j,n),~] = active_gmms(T_vec(j),rupt,sitevar,'cb_2014');
+        [~,sigmaCY2(j,n),~] = active_gmms(T_vec(j),rupt,sitevar,'cy_2014');
         if M(n)>= 5
-            [~,sigmaI2(j,n),~] = active_caller(T_vec(j),rupt,sitevar,'i_2014');
+            [~,sigmaI2(j,n),~] = active_gmms(T_vec(j),rupt,sitevar,'i_2014');
         end
     end
 end
@@ -75,8 +78,16 @@ for n = 1:2
     ylabel('Sigma [Ln Units]')
     title(titles(n))
     if n == 2
-        legend('ASK','BSSA','CB','CY','I','Location','Southeast')
+        legend(gmm_name{nga2west},'Location','Southeast','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 3]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 3]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor11new.jpg')
+saveas(gcf,'../figures/gregor11.pdf')

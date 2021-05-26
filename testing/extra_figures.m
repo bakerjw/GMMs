@@ -97,8 +97,14 @@ posL = get(hL,'position');
 set(lgd,'position',posL);
 axis(hL,'off');
 hold off
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 6]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 6]);
 % Save Figure
-saveas(gcf,'../figures/Duration Figure 1.jpg')
+saveas(gcf,'../figures/Duration Figure 1.pdf')
 
 % Create Duration Figure 2
 figure('Name','Significant Durations','NumberTitle','off','Position',[10 10 600 600])
@@ -126,8 +132,14 @@ posL = get(hL,'position');
 set(lgd,'position',posL);
 axis(hL,'off');
 hold off
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 6]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 6]);
 % Save Figure
-saveas(gcf,'../figures/Duration Figure 2.jpg')
+saveas(gcf,'../figures/Duration Figure 2.pdf')
 
 %% Creation of Vertical Figures
 median = zeros(length(Rrup),length(M),2);
@@ -154,12 +166,18 @@ for n = 1:length(M)
     xlabel('Distance [km]')
     ylabel('SA [g]')
     if n == 4
-        legend("as1997","c1997","Location","NorthEast");
+        legend("as1997","c1997","Location","Southwest");
     end
 end
 hold off
 % Save Figure
-saveas(gcf,'../figures/Vertical Figure 1.jpg')
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 6]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 6]);
+saveas(gcf,'../figures/Vertical Figure 1.pdf')
 
 % Function calls for Figure 2
 median = zeros(length(M),length(T),2);
@@ -185,12 +203,18 @@ for n = 1:length(M)
     xlabel('Period [s]')
     ylabel('SA [g]')
     if n == 4
-        legend("as1997","c1997","Location","NorthEast");
+        legend("as1997","c1997","Location","Southwest");
     end
 end
 hold off
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 6]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 6]);
 % Save Figure
-saveas(gcf,'../figures/Vertical Figure 2.jpg')
+saveas(gcf,'../figures/Vertical Figure 2.pdf')
 
 % Create Vertical Figure 3
 figure('Name','Vertical Figure 3','NumberTitle','off','Position',[10 10 600 400])
@@ -202,5 +226,11 @@ axis(limits)
 xlabel('Period [s]')
 ylabel('Sigma [ln units]')
 legend("as1997","c1997","Location","NorthEast");
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [4.5 4]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 4.5 4]);
 % Save Figure
-saveas(gcf,'../figures/Vertical Figure sigma.jpg')
+saveas(gcf,'../figures/Vertical Figure sigma.pdf')

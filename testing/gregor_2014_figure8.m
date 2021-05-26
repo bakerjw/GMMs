@@ -80,5 +80,13 @@ for n = 1:4
         legend(gmm_name{nga2west},'Location','Southwest','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor8.jpg')
+saveas(gcf,'../figures/gregor8.pdf')

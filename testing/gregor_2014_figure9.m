@@ -87,9 +87,18 @@ for n = 1:4
     xlabel('Period [sec]')
     ylabel('PSA [g]')
     title(titles(n))
-    if n == 4
+    if n == 3
         legend(gmm_name{nga2west},'Location','Southwest','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
+
 %% Save Figure
-saveas(gcf,'../figures/gregor9.jpg')
+saveas(gcf,'../figures/gregor9.pdf')

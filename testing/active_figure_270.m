@@ -68,5 +68,13 @@ ylabel('SA [g]')
 title("SA versus Rjb Distance")
 legend(gmm_name{gmm_vec},'Location','Southwest','Interpreter','none')
 
+
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [5 5]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 5 5]);
+    
 %% Save Figure
-saveas(gcf,'../figures/Active Figure 270.jpg')
+saveas(gcf,'../figures/Active Figure 270.pdf')

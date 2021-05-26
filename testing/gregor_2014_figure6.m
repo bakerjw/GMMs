@@ -23,7 +23,7 @@ Rrup = [];
 Rjb = [];        
 Rhyp = [];      
 Rx = -30:1:40;        
-Ry0 = [];       
+Ry0 = 0;       
 HW = 1;         % Hanging wall
 AS = 0;         % Not an aftershock
 Ztor = [];      % 0 or 6
@@ -36,7 +36,7 @@ lambda = [];    % Normal (top) and reverse (bottom)
 % Site inputs
 is_soil = [];   % Not used for these models
 Vs30 = 760;
-fvs30 = 0;      % 0 for inferred and 1 for measured
+fvs30 = 1;      % 0 for inferred and 1 for measured
 Z25 = 1.9826;   % Used in CB model 
 Z10 = [0.0481 0 0 0.0413 0];    % Values corresponding with the 5 models, 0 if not used (CB and I)
 Zbot = 15;      
@@ -53,7 +53,7 @@ for j = 1:4
     % Surface or Buried
     if j==2 || j==4
         rupt.Ztor = 6;
-    else 
+    else
         rupt.Ztor = 0;
     end
     % Normal or Reverse Faulting
@@ -63,17 +63,28 @@ for j = 1:4
         rupt.lambda = 90;
     end
     for n = 1:length(Rx)
-        rupt.Rx = Rx(n); 
-        if Rx(n)<0
-            rupt.Rrup = sqrt(Rx(n)^2 + rupt.Ztor^2); rupt.Rjb = abs(Rx(n)); 
-        elseif Rx(n)>=0   
-            rupt.Rrup = (Rx(n) + rupt.Ztor)*cos(rupt.delta);
-            if Rx(n)<=16
-                rupt.Rjb = 0; 
-            else
-                rupt.Rjb = Rx(n)-16;
-            end
+        
+        % compute distance metrics for a given Rx
+        rupt.Rx = Rx(n);
+        if Rx(n) < 0
+            rupt.HW = 0;
+            rupt.Rjb = -Rx(n);
+        elseif Rx(n)<=16
+            rupt.HW = 1;
+            rupt.Rjb = 0;
+        else
+            rupt.HW = 1;
+            rupt.Rjb = Rx(n)-16;
         end
+        % Rrup calculation from Kaklamanos et al. (2011)
+        if Rx(n) < rupt.Ztor * tand(rupt.delta)
+            rupt.Rrup = sqrt(Rx(n)^2 + rupt.Ztor^2);
+        elseif Rx(n) < rupt.Ztor * tand(rupt.delta) + rupt.W * secd(rupt.delta)
+            rupt.Rrup = Rx(n)*sind(rupt.delta) + rupt.Ztor*cosd(rupt.delta);
+        else
+            rupt.Rrup = sqrt( (Rx(n) - rupt.W*cosd(rupt.delta))^2 + (rupt.Ztor + rupt.W * sind(rupt.delta))^2 );
+        end
+        
         for i = 1:length(nga2west)
             [medianvec{i}(j,n),~,~] = active_gmms(T,rupt,sitevar,gmm_name{nga2west(i)});
         end
@@ -100,5 +111,13 @@ for n = 1:4
         legend(gmm_name{nga2west},'Location','South','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor6.jpg')
+saveas(gcf,'../figures/gregor6.pdf')

@@ -88,14 +88,17 @@ for n = 1:4
     xlabel('Vs30')
     ylabel(y_labels(n))
     title(titles(n))
-    if n == 4
-        legend(gmm_name{nga2west},'Location','NorthEast','Interpreter','none')
+    if n == 3
+        legend(gmm_name{nga2west},'Location','SouthWest','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor4new.jpg')
-% save("ASK_SAs.mat","medianASK2")
-% save("BSSA_SAs.mat","medianBSSA2")
-% save("CB_SAs.mat","medianCB2")
-% save("CY_SAs.mat","medianCY2")
-% save("I_SAs.mat","medianI2")
+saveas(gcf,'../figures/gregor4.pdf')

@@ -69,5 +69,12 @@ for m = 1:2
     end
 end
 
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 4]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+
 %% Save Figure
-saveas(gcf,'../figures/Subduction Figure 3.jpg')
+saveas(gcf,'../figures/Subduction Figure 3.pdf')

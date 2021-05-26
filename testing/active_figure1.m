@@ -4,6 +4,8 @@
 % Created by Emily Mongold, 1/22/21
 %
 % clear
+clear rup
+clear site
 clc
 addpath('../gmms/')
 addpath('../')
@@ -73,5 +75,12 @@ ylabel('PGA [g]')
 title("PGA versus R_{JB} Distance of a M6.0 Earthquake")
 legend(gmm_name{pga_gmms},'Location','Southwest','Interpreter','none')
 
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [4.5 4]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 4.5 4]);
+
 %% Save Figure
-saveas(gcf,'../figures/Active Figure 1.jpg')
+saveas(gcf,'../figures/Active Figure 1.pdf')

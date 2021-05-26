@@ -77,8 +77,16 @@ for n = 1:4
     ylabel('PSA [g]')
     title(titles(n))
     if n == 4
-        legend('ASK','BSSA','CB','CY','Location','Southwest')
+        legend(gmm_name{nga2west((1:4))},'Location','Southwest','Interpreter','none')
     end
 end
+
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor2new.jpg')
+saveas(gcf,'../figures/gregor2.pdf')

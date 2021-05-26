@@ -61,12 +61,19 @@ for n = 1:length(M)
     xlabel('Distance [km]')
     ylabel('SA [g]')
     if n == 4
-        legend("ab2006","sp2016","Location","NorthEast");
+        legend("ab2006","sp2016","Location","Southwest");
     end
 end
 hold off
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 6]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 6]);
+
 % Save Figure
-saveas(gcf,'../figures/Stable Figure 1.jpg')
+saveas(gcf,'../figures/Stable Figure 1.pdf')
 
 % Inputs and function call for Figure 2
 median = zeros(length(M),length(T),2);
@@ -92,12 +99,19 @@ for n = 1:length(M)
     xlabel('Period [s]')
     ylabel('SA [g]')
     if n == 4
-        legend("ab2006","sp2016","Location","NorthEast");
+        legend("ab2006","sp2016","Location","Southwest");
     end
 end
 hold off
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [6 6]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 6 6]);
+
 % Save Figure
-saveas(gcf,'../figures/Stable Figure 2.jpg')
+saveas(gcf,'../figures/Stable Figure 2.pdf')
 
 % Create Stable Figure 3
 figure('Name','Stable Figure 3','NumberTitle','off','Position',[10 10 600 400])
@@ -109,5 +123,12 @@ axis(limits)
 xlabel('Period [s]')
 ylabel('Sigma [ln units]')
 legend("as1997","c1997","Location","NorthEast");
+% set figure size
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperSize', [4.5 4]);
+    set(gcf, 'PaperPositionMode', 'manual');
+    set(gcf, 'PaperUnits', 'inches');
+    set(gcf, 'PaperPosition', [0 0 4.5 4]);
+
 % Save Figure
-saveas(gcf,'../figures/Stable Figure sigma.jpg')
+saveas(gcf,'../figures/Stable Figure sigma.pdf')

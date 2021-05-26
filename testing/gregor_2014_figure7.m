@@ -135,5 +135,12 @@ ylabel('PGA [g]')
 title("CY")
 legend('CY','Japan/Italy','Wenchuan','Location','Southwest')
 
+% set figure size
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperSize', [5 6]);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'inches');
+set(gcf, 'PaperPosition', [0 0 5 6]);
+
 %% Save Figure
-saveas(gcf,'../figures/gregor7.jpg')
+saveas(gcf,'../figures/gregor7.pdf')
