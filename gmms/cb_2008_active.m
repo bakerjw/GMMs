@@ -95,8 +95,6 @@ if(iflg==0)
             T_low = max(period(period<Teach));
             T_hi = min(period(period>Teach));
 
-%             [sa_low sigma_low] = CB_2008_nga (M, T_low, Rrup, Rjb, Ztor, delta, lambda, Vs30, Zvs, arb, ffltz, fhngr, Frv, Fnm, fhngm);
-%             [sa_hi sigma_hi] = CB_2008_nga (M, T_hi, Rrup, Rjb, Ztor, delta, lambda, Vs30, Zvs, arb, ffltz, fhngr, Frv, Fnm, fhngm);
             [sa_low, sigma_low] = cb_2008_active (T_low,rup,site,A1100);
             [sa_hi, sigma_hi] = cb_2008_active (T_hi,rup,site,A1100);
 

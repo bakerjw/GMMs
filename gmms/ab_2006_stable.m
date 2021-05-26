@@ -19,8 +19,10 @@ function [median, sigma,period1] = ab_2006_stable(T,rup,site,stress)
 % Seismological Society of America, 96(6), 2181-2205.
 %
 % Revised February 19, 2010 to include stress drop factor erratum published in 
-% Bulletin of the Seismological Society of America, Vol. 96, No. 6, pp. 2181-2205, 
-% 2006 
+% Atkinson, G. M., and Boore, D. M. (2007). “Erratum: Earthquake Ground-
+% Motion Prediction Equations for Eastern North America.” Bulletin of the 
+% Seismological Society of America, 97(3), 1032–1032.
+
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INPUT
