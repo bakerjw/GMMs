@@ -61,10 +61,12 @@ fnm = rup.lambda >= -150 & rup.lambda <= -30; % fnm: 1 for lambda between -150 a
 
 if isempty(rup.Ztor)
     if frv == 1
-        rup.Ztor = max(2.704 - 1.226 * max(rup.M-5.849,0),0)^2;
+        Ztor = max(2.704 - 1.226 * max(rup.M-5.849,0),0)^2;
     else
-        rup.Ztor = max(2.673 - 1.136 * max(rup.M-4.970,0),0)^2;
+        Ztor = max(2.673 - 1.136 * max(rup.M-4.970,0),0)^2;
     end
+else
+    Ztor = rup.Ztor;
 end
 W_empty_flag = 0;
 if isempty(rup.W)
@@ -87,7 +89,7 @@ if length (T) == 1 && T == 1000 % Compute median and sigma with pre-defined peri
     sigma=zeros(1,length(period)-2);
     period1=period(1:end-2);
     for ip=1:length(period)-2
-        [median(ip),sigma(ip)]=ASK_2014_sub_1(rup.M,ip,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,rup.Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
+        [median(ip),sigma(ip)]=ASK_2014_sub_1(rup.M,ip,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
     end
 else                            % Compute median and sigma with user-defined period
     median=zeros(1, length(T));
@@ -101,8 +103,8 @@ else                            % Compute median and sigma with user-defined per
             ip_low  = find(period==T_low);
             ip_high = find(period==T_high);
             
-            [Sa_low, sigma_low] = ASK_2014_sub_1(rup.M,ip_low,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,rup.Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
-            [Sa_high, sigma_high] = ASK_2014_sub_1(rup.M,ip_high,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,rup.Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
+            [Sa_low, sigma_low] = ASK_2014_sub_1(rup.M,ip_low,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
+            [Sa_high, sigma_high] = ASK_2014_sub_1(rup.M,ip_high,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
             x = [log(T_low) log(T_high)];
             Y_sa = [log(Sa_low) log(Sa_high)];
             Y_sigma = [sigma_low sigma_high];
@@ -110,7 +112,7 @@ else                            % Compute median and sigma with user-defined per
             sigma(i) = interp1(x, Y_sigma, log(Ti));
         else
             ip_T = find(abs((period- Ti)) < 0.0001);
-            [median(i), sigma(i)] = ASK_2014_sub_1(rup.M,ip_T,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,rup.Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
+            [median(i), sigma(i)] = ASK_2014_sub_1(rup.M,ip_T,rup.Rrup,rup.Rjb,rup.Rx,rup.Ry0,Ztor,rup.delta,frv,fnm,rup.AS,rup.HW,rup.W,Z10,site.Vs30,site.fvs30,site.region);
         end
     end
     if W_empty_flag == 1

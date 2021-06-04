@@ -6,8 +6,9 @@ function [median, sigma, period1] = as_2008_active(T,rup,site)
 %
 %   updated 2011/01/19
 %          Adjusted Hanging Wall term
-%          from the Errata for “AS NGA” model (http://peer.berkeley.edu/products/abrahamson-silva_nga_report_files/AS08_NGA_errata.pdf)
+%          from the Errata for “AS NGA” model (http://apps.peer.berkeley.edu/products/abrahamson-silva_nga_report_files/AS08_NGA_errata.pdf)
 %          This version includes constant displacement effect
+
 %   updated 2010/05/20
 %   updated 2009/05/05
 %

@@ -31,8 +31,8 @@ function [ median, sigma, tau, phi ] = as_2016_duration(rup,site,dur_type)
 %                     = 4 for Italy 
 %                     = 5 for Turkey
 %                     = 6 for Taiwan
-%                   Used to set local CJ flag for California (0) or Japan
-%                   (1) or other (-999)
+%                   Used to set local CJ flag for California (0), Japan
+%                   (1), or other (-999)
 %   dur_type      = 1 for 5-75% horizontal significant duration
 %                 = 2 for 5-75% vertical significant duration
 %                 = 3 for 5-95% horizontal significant duration

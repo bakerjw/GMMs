@@ -26,7 +26,8 @@ function [median, sigma, period1] = scemy_1997_active(T,rup,site)
 %                               or thrust fault
 %   rup             = rupture object input containing the following
 %                     variables:
-%       is_soil         = soil type indicator, used to set DS:
+%       is_soil         = 0 (soil),1(soft rock),2(hard rock)
+%                       = soil type indicator, used to set DS:
 %                           = 1 for deep soil
 %                           = 0 for rock
 % OUTPUT

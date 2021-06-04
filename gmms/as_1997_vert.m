@@ -29,7 +29,8 @@ function [median, sigma, period1] = as_1997_vert(T,rup,site)
 %                       = 0 otherwise
 %   site          = site object input containing the following
 %                   variables:
-%       is_soil         = 1 for soil prediction
+%       is_soil         = 0 (soil),1(soft rock),2(hard rock), locally, S:
+%                       = 1 for soil prediction
 %                       = 0 for rock
 % OUTPUT   
 %   median          = median spectral acceleration prediction
@@ -53,11 +54,17 @@ period = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.075, 0.09, 0.1, 0.12, 0.15, 0.17
 
 % fill in missing input parameters with default values
 if isempty(site.is_soil) % no soil type supplied
-    site.is_soil = 1;
+    S = 1;
+elseif site.is_soil == 0
+    S = 1; 
+elseif site.is_soil == 1 || site.is_soil == 2
+    S = 0;
 end
 
 if isempty(rup.HW) % no Hanging wall indicator supplied
-    rup.HW = 0;
+    HW = 0;
+else
+    HW = rup.HW;
 end
 
 % use the full period vector if T = 1000
@@ -97,16 +104,16 @@ else
     
 
     % compute the PGA term, if we need it
-    S = site.is_soil;
-    if ((index ~= 0) || (site.is_soil ~= 0))
+%     S = site.is_soil;
+    if ((index ~= 0) || (S ~= 0))
         pga_constants = get_abrahamson_silva_constants(1);
         rock_S = 0;
-        pga_rock = exp(calc_val(rup.M,R,pga_constants,FaultType,rock_S,rup.HW,0));
+        pga_rock = exp(calc_val(rup.M,R,pga_constants,FaultType,rock_S,HW,0));
     else
         pga_rock = 0;
     end
     
-    median(n) = exp(calc_val(rup.M,R,V,FaultType,S,rup.HW,pga_rock));
+    median(n) = exp(calc_val(rup.M,R,V,FaultType,S,HW,pga_rock));
     sigma(n) = abrahamson_silva_sigma(rup.M,index);
 end
 end

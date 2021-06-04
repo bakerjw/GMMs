@@ -41,7 +41,9 @@ end
 period   = [ 0.01	0.02	0.03	0.05	0.075	0.1	0.15	0.2	0.25	0.3	0.4	0.5	0.75	1	1.5	2	3	4	5	7.5	10	0];
 
 if site.Vs30 > 1200
-    site.Vs30 = 1200;
+    Vs30 = 1200;
+else 
+    Vs30 = site.Vs30;
 end
 
 if length (T) == 1 && T == 1000 % Compute median and sigma with pre-defined period
@@ -49,7 +51,7 @@ if length (T) == 1 && T == 1000 % Compute median and sigma with pre-defined peri
     sigma=zeros(1,length(period)-1);
     period1=period(1:end-1);
     for ip=1:length(period)-1
-        [median(ip),sigma(ip)] = I_2014_sub(rup.M,ip,rup.Rrup,site.Vs30,F);
+        [median(ip),sigma(ip)] = I_2014_sub(rup.M,ip,rup.Rrup,Vs30,F);
     end
 else                            % Compute median and sigma with user-defined period
     median=zeros(1, length(T));
@@ -63,8 +65,8 @@ else                            % Compute median and sigma with user-defined per
             ip_low  = find(period==T_low);
             ip_high = find(period==T_high);
             
-            [Sa_low, sigma_low] = I_2014_sub(rup.M, ip_low, rup.Rrup, site.Vs30,F);
-            [Sa_high, sigma_high] = I_2014_sub(rup.M, ip_high, rup.Rrup, site.Vs30,F);
+            [Sa_low, sigma_low] = I_2014_sub(rup.M, ip_low, rup.Rrup, Vs30,F);
+            [Sa_high, sigma_high] = I_2014_sub(rup.M, ip_high, rup.Rrup, Vs30,F);
             x = [log(T_low) log(T_high)];
             Y_sa = [log(Sa_low) log(Sa_high)];
             Y_sigma = [sigma_low sigma_high];
@@ -72,7 +74,7 @@ else                            % Compute median and sigma with user-defined per
             sigma(i) = interp1(x, Y_sigma, log(Ti));
         else
             ip_T = find(abs((period- Ti)) < 0.0001);
-            [median(i), sigma(i)] = I_2014_sub(rup.M,ip_T,rup.Rrup,site.Vs30,F);
+            [median(i), sigma(i)] = I_2014_sub(rup.M,ip_T,rup.Rrup,Vs30,F);
         end
     end
 end

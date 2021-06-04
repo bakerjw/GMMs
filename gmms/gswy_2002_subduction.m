@@ -21,7 +21,8 @@ function [median, sigma, period1] = gswy_2002_subduction(T,rup,site)
 %       R           = Source to site distance to rupture surface (km)
 %   site        = site object input containing the following
 %                 variable:
-%       is_soil     = Soil type indicator (Zr used locally: 
+%       is_soil     = 0 (soil),1(soft rock),2(hard rock)
+%                   = Soil type indicator (Zr used locally: 
 %                        For Rock Sites, Zr = 1
 %                        Otherwise, Zr = 0)
 %OUTPUT

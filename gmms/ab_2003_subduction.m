@@ -101,28 +101,28 @@ sigma2_in = [0.14 0.07 0.07 0.1 0.1 0.11 0.11 0.08];
 
 % Preliminary Inital Conditions and Variables Computation
 if rup.Zhyp >= 100
-    rup.Zhyp = 100;
+    Zhyp = 100;
 else
-    rup.Zhyp;
+    Zhyp = rup.Zhyp;
 end
 
 if Zt == 0 && rup.M >= 8.5
-    rup.M = 8.5;
+    M = 8.5;
 elseif Zt == 0 && rup.M < 8.5
-    rup.M;
+    M = rup.M;
 elseif Zt == 1 && rup.M >= 8.0
-    rup.M = 8.0;
+    M = 8.0;
 elseif Zt == 1 && rup.M < 8.0
-    rup.M;
+    M = rup.M;
 end
 
-delta = 0.00724*(10^(0.507*rup.M));
+delta = 0.00724*(10^(0.507*M));
 R = sqrt(rup.Rrup^2 + delta^2);
 
 if Zt == 0
-    g = 10^(1.2 - 0.18*rup.M);
+    g = 10^(1.2 - 0.18*M);
 elseif Zt == 1
-    g = 10^(0.301 - 0.01*rup.M);
+    g = 10^(0.301 - 0.01*M);
 end
 
 if site.Vs30 > 760
@@ -155,7 +155,7 @@ if Zt == 0
         c1 = c1_it_jp(1);
     end
     
-    log_PGArx = c1 + c2_it(1)*rup.M + c3_it(1)*rup.Zhyp + c4_it(1)*R - ...
+    log_PGArx = c1 + c2_it(1)*M + c3_it(1)*Zhyp + c4_it(1)*R - ...
         g*log10(R);
     PGArx = 10^(log_PGArx);
     
@@ -187,7 +187,7 @@ elseif Zt == 1
         c1 = c1_in_jp(1);
     end
     
-    log_PGArx = c1 + c2_in(1)*rup.M + c3_in(1)*rup.Zhyp + c4_in(1)*R - ...
+    log_PGArx = c1 + c2_in(1)*M + c3_in(1)*Zhyp + c4_in(1)*R - ...
         g*log10(R);
     PGArx =10^(log_PGArx);
     
@@ -238,7 +238,7 @@ if Zt == 0
             c1 = c1_it_jp(i);
         end
         
-        log_10_Y = c1 + c2_it(i)*rup.M + c3_it(i)*rup.Zhyp + c4_it(i)*R - ...
+        log_10_Y = c1 + c2_it(i)*M + c3_it(i)*Zhyp + c4_it(i)*R - ...
             g*log10(R) + c5_it(i)*sl*Sc + c6_it(i)*sl*Sd + ...
             c7_it(i)*sl*Se; % Log10 Sa in cm/s^2
         sigma_10 = sqrt((sigma1_it(i))^2 + (sigma2_it(i))^2);
@@ -273,7 +273,7 @@ elseif Zt == 1
             c1 = c1_in_jp(i);
         end
         
-        log_10_Y = c1 + c2_in(i)*rup.M + c3_in(i)*rup.Zhyp + c4_in(i)*R - ...
+        log_10_Y = c1 + c2_in(i)*M + c3_in(i)*Zhyp + c4_in(i)*R - ...
             g*log10(R) + c5_in(i)*sl*Sc + c6_in(i)*sl*Sd + ...
             c7_in(i)*sl*Se; % Log10 Sa in cm/s^2
         sigma_10 = sqrt((sigma1_in(i))^2 + (sigma2_in(i))^2);

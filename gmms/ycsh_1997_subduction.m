@@ -28,7 +28,8 @@ function [median, sigma, period1] = ycsh_1997_subduction(T,rup,site,sub_ind)
 %       Zhyp        = Hypocentral (Focal) depth from surface to focus (km)
 %   site        = site object input containing the following
 %                 variable:
-%       is_soil     = soil type indicator, 'Zr' locally:
+%       is_soil     = 0 (soil),1(soft rock),2(hard rock)
+%                   = soil type indicator, 'Zr' locally:
 %                        For Rock Sites, Zr = 1
 %                        Otherwise, Zr = 0
 %   sub_ind     = Subduction Zone Type, 'Zt' locally: 
