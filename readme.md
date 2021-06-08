@@ -15,7 +15,7 @@ Figures created by the testing scripts are in the folder 'figures'.
 
 Further documentation can be found in the following report:
 
-Mongold and Baker (2021). A software repository of Ground Motion Models.” Blume Center Report # 207. https://blume.stanford.edu/reports
+Mongold and Baker (2021). A software repository of Ground Motion Models.” Blume Earthquake Engineering Center Technical Report 207. https://purl.stanford.edu/qy113my5899
 
 Users desiring additional information, or looking for other GMMs, are referred to John Douglas's compilation at http://www.gmpe.org.uk/. Python implimentations of ground motion models are available at https://github.com/gem/oq-engine/tree/master/openquake/hazardlib/gsim and https://github.com/arkottke/pygmm/.
 
