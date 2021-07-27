@@ -33,7 +33,11 @@ switch GMM_name
         [median,sigma, period1] = a_2015_active(T,rup);
     
     case 'as_1997'
-        [median, sigma, period1] = as_1997_active(T,rup,site);
+        if T == 0
+            [median, sigma, period1] = as_1997_active(0.01,rup,site);
+        else
+            [median, sigma, period1] = as_1997_active(T,rup,site);
+        end
     
     case 'as_2008'
         [median, sigma, period1] = as_2008_active(T,rup,site);
@@ -45,7 +49,11 @@ switch GMM_name
         [median, sigma, period1] = ba_2008_active(T, rup, site);
         
     case 'bjf_1997'
-        [median, sigma, period1] = bjf_1997_active(T,rup,site);
+        if T == 0
+            [median, sigma, period1] = bjf_1997_active(0.001,rup,site);
+        else
+            [median, sigma, period1] = bjf_1997_active(T,rup,site);
+        end
         
     case 'bssa_2014'
         [median, sigma, period1] = bssa_2014_active(T, rup, site);
@@ -63,13 +71,21 @@ switch GMM_name
         [median, sigma, period1] = cy_2014_active(T,rup,site);
         
     case 'i_2008'
-        [median, sigma, period1] = i_2008_active(T,rup,site);
+        if T == 0
+            [median, sigma, period1] = i_2008_active(0.01,rup,site);
+        else
+            [median, sigma, period1] = i_2008_active(T,rup,site);
+        end
         
     case 'i_2014'
         [median, sigma, period1] = i_2014_active(T,rup,site);
         
     case 'scemy_1997'
-        [median, sigma, period1] = scemy_1997_active(T,rup,site);
+        if T == 0
+            [median, sigma, period1] = scemy_1997_active(0.001,rup,site);
+        else
+            [median, sigma, period1] = scemy_1997_active(T,rup,site);
+        end
         
     case 'z_2006'
         [median, sigma, period1] = z_2006_active(T,rup,site,[],0);
