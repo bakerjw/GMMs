@@ -12,10 +12,12 @@ These demonstrate how to set up the input variable objects as well as how to uti
 
 Figures created by the testing scripts are in the folder 'figures'.
 
+Example comparisons to output values from Global Earthquake Model (OpenQuake) output values along with a flexible
+comparison function are in the folder 'comparison testing'.
 
 Further documentation can be found in the following report:
 
-Mongold and Baker (2021). A software repository of Ground Motion Models.” Blume Earthquake Engineering Center Technical Report 207. https://purl.stanford.edu/qy113my5899
+Mongold and Baker (2021). "A software repository of Ground Motion Models.” Blume Earthquake Engineering Center Technical Report 207. https://purl.stanford.edu/qy113my5899
 
 The following Ground Motion Models are currently provided:
 

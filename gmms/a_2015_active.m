@@ -42,7 +42,7 @@ if isempty(rup.Rhyp)
 end
 
 if rup.M > 6
-      disp("Warning, magnitedu is larger than approprite for this model")  
+      disp("Warning, magnitude is larger than appropriate for this model")  
 end
 
 % % Coefficients
@@ -69,6 +69,8 @@ sigmaTotal	= [ 	0.33	0.37	0.39	0.41	0.39	0.37	0.36	0.35	0.34	0.33	0.32	0.31	];
 if isempty(rup.h_eff) % use estimated effective depth
     h_eff = max(1, 10.^(-0.28+0.19.*rup.M)); % effective depth based on alternative method proposed in Atkinson (2015)
     % rup.h_eff = max(1, 10.^(-1.72+0.43.*M)); % alternate effective depth from Yenier and Atkinson (2014) -- not preferred by Atkinson
+else 
+    h_eff = rup.h_eff;
 end
 
 if length(T) == 1 && T == 1000
