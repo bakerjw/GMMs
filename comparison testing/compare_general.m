@@ -128,7 +128,7 @@ for i = 1:height(OQ_table)
     end
 end
 
-error_test = median_GMM - OQ_results;
+error_test = (median_GMM - OQ_results)./OQ_results;
 max_err = max(max(abs(error_test)));
 
 %% Running with values from spreadsheet- correct for ask2014 (uncomment and pause at end to view error matrices)

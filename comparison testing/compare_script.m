@@ -5,6 +5,7 @@
 % 19 August 2021
 
 clear;clc;
+addpath ../gmms
 %%
 
 OQ_file = "IDRISS_2014_MEAN.csv";
