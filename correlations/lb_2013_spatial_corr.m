@@ -1,15 +1,15 @@
 function [rho] = lb_2013_spatial_corr(T1, T2, h)
-
+% Compute the spatial correlation of epsilons for the NGA ground motion models
 %
 % Created by Christophe Loth, 12/18/2012
 % Updated by Jack Baker, 6/28/2019 to resolve an error in the original
 % calculation (see Erratum below)
-%
-% Compute the spatial correlation of epsilons for the NGA ground motion models
+% Updated by Jack Baker, 4/20/2022 to refine the interpolation of B
+% matrices and avoid creating saddle points along the diagonal
 %
 % The function is strictly empirical, fitted over the range 0.01s <= T1, T2 <= 10s
 %
-% Documentation is provided in the following document:
+% Documentation is provided in the following documents:
 % Loth, C., and Baker, J. W. (2013). "A spatial cross-correlation model of 
 % ground motion spectral accelerations at multiple periods." 
 % Earthquake Engineering & Structural Dynamics, 42(3), 397-417. 
@@ -31,7 +31,7 @@ function [rho] = lb_2013_spatial_corr(T1, T2, h)
 %   rho         = The predicted correlation coefficient
 
 
-% Verify the validity of input arguments
+% Check the validity of input arguments
 if min(T1,T2)<0.01
     error('The period must be greater than or equal to 0 s')
 end
@@ -43,14 +43,17 @@ end
 
 Tlist=[0.01 0.1 0.2 0.5 1 2 5 7.5 10.0001];
 
+% matrices of Tlist values corresponding to the B matrix entries
+[TT1, TT2] = meshgrid(Tlist, Tlist); 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Model coefficients--note that these were updated due to an error
+% Model coefficients--note that these were updated in 2019 due to an error
 % in the original publication. The original publication's coefficients are
 % at the bottom of this function.
 %
 % Table II. Short range coregionalization matrix, B1
-B1=[0.29	0.25	0.23	0.23	0.18	0.1	0.06	0.06	0.06;
+B{1}=[0.29	0.25	0.23	0.23	0.18	0.1	0.06	0.06	0.06;
 0.25	0.30	0.2	0.16	0.1	0.04	0.03	0.04	0.05;
 0.23	0.20	0.27	0.18	0.1	0.03	0	0.01	0.02;
 0.23	0.16	0.18	0.31	0.22	0.14	0.08	0.07	0.07;
@@ -61,7 +64,7 @@ B1=[0.29	0.25	0.23	0.23	0.18	0.1	0.06	0.06	0.06;
 0.06	0.05	0.02	0.07	0.12	0.19	0.26	0.24	0.23];
 
 % Table III. Long range coregionalization matrix, B2
-B2=[0.47	0.4	0.43	0.35	0.27	0.15	0.13	0.09	0.12;
+B{2}=[0.47	0.4	0.43	0.35	0.27	0.15	0.13	0.09	0.12;
 0.4	0.42	0.37	0.25	0.15	0.03	0.04	0	0.03;
 0.43	0.37	0.45	0.36	0.26	0.15	0.09	0.05	0.08;
 0.35	0.25	0.36	0.42	0.37	0.29	0.2	0.16	0.16;
@@ -72,11 +75,11 @@ B2=[0.47	0.4	0.43	0.35	0.27	0.15	0.13	0.09	0.12;
 0.12	0.03	0.08	0.16	0.21	0.32	0.49	0.6	0.68];
 
 % Table IV. Nugget effect coregionalization matrix, B3
-B3=[0.24	0.22	0.21	0.09	-0.02	0.01	0.03	0.02	0.01;
+B{3}=[0.24	0.22	0.21	0.09	-0.02	0.01	0.03	0.02	0.01;
 0.22	0.28	0.2	0.04	-0.05	0	0.01	0.01	-0.01;
 0.21	0.20	0.28	0.05	-0.06	0	0.04	0.03	0.01;
-0.09	0.04	0.05	0.26	0.14	0.05	0.05	0.05	0.04;
--0.02	-0.05	-0.06	0.14	0.20	0.07	0.05	0.05	0.05;
+0.09	0.04	0.05	0.27	0.14	0.05	0.05	0.05	0.04;
+-0.02	-0.05	-0.06	0.14	0.19	0.07	0.05	0.05	0.05;
 0.01	0.00	0.00	0.05	0.07	0.12	0.08	0.07	0.06;
 0.03	0.01	0.04	0.05	0.05	0.08	0.12	0.1	0.08;
 0.02	0.01	0.03	0.05	0.05	0.07	0.1	0.1	0.09;
@@ -84,68 +87,69 @@ B3=[0.24	0.22	0.21	0.09	-0.02	0.01	0.03	0.02	0.01;
 
 
 
+% Find the interval containing each input period 
+index1 = find((Tlist<=T1),1,'last');
+index2 = find((Tlist<=T2),1,'last');
 
-% Find in which interval each input period is located
-for i=1:length(Tlist)-1
-    if T1-Tlist(i)>=0 & T1-Tlist(i+1)<0
-        index1=i;
+
+% Interpolate each coregionalization matrix coefficient
+if index1 == index2 
+    % period pair is close to the diagonal. Uses a careful interpolation to 
+    % keep the ridgeo on the diagonal and avoid creating saddle points 
+    for i=1:3
+        Bcoeff{i} = interpolate_B(Tlist, B{i}, T1, T2);
     end
-    if T2-Tlist(i)>=0 & T2-Tlist(i+1)<0
-        index2=i;
+
+else 
+    % linearly interpolate using the nearest four points
+    for i=1:3
+        Bcoeff{i} = griddata(TT1(index1:index1+1,index2:index2+1), ...
+                             TT2(index1:index1+1,index2:index2+1), ...
+                             B{i}(index1:index1+1,index2:index2+1), T2, T1);
+        % the indexing above is to pass in only the adjacent entries of the
+        % matrix, to speed the interpolation calculation
     end
 end
-
-
-% Linearly interpolate the corresponding value of each coregionalization
-% matrix coefficient
-
-B1coeff1=B1(index1,index2)+(B1(index1+1,index2)-B1(index1,index2))./...
-    (Tlist(index1+1)-Tlist(index1)).*(T1-Tlist(index1));
-
-B1coeff2=B1(index1,index2+1)+(B1(index1+1,index2+1)-B1(index1,index2+1))./...
-    (Tlist(index1+1)-Tlist(index1)).*(T1-Tlist(index1));
-
-B1coeff0=B1coeff1+(B1coeff2-B1coeff1)./...
-    (Tlist(index2+1)-Tlist(index2)).*(T2-Tlist(index2));
-
-
-
-
-B2coeff1=B2(index1,index2)+(B2(index1+1,index2)-B2(index1,index2))./...
-    (Tlist(index1+1)-Tlist(index1)).*(T1-Tlist(index1));
-
-B2coeff2=B2(index1,index2+1)+(B2(index1+1,index2+1)-B2(index1,index2+1))./...
-    (Tlist(index1+1)-Tlist(index1)).*(T1-Tlist(index1));
-
-B2coeff0=B2coeff1+(B2coeff2-B2coeff1)./...
-    (Tlist(index2+1)-Tlist(index2)).*(T2-Tlist(index2));
-
-
-
-
-B3coeff1=B3(index1,index2)+(B3(index1+1,index2)-B3(index1,index2))./...
-    (Tlist(index1+1)-Tlist(index1)).*(T1-Tlist(index1));
-
-B3coeff2=B3(index1,index2+1)+(B3(index1+1,index2+1)-B3(index1,index2+1))./...
-    (Tlist(index1+1)-Tlist(index1)).*(T1-Tlist(index1));
-
-B3coeff0=B3coeff1+(B3coeff2-B3coeff1)./...
-    (Tlist(index2+1)-Tlist(index2)).*(T2-Tlist(index2));
 
 
 % Compute the correlation coefficient (Equation 42)
-
-rho=B1coeff0*exp(-3*h/20)+B2coeff0*exp(-3*h/70);
-
-if h==0
-    rho=B1coeff0*exp(-3*h/20)+B2coeff0*exp(-3*h/70)+B3coeff0;
-end
+rho=Bcoeff{1}*exp(-3*h/20) + Bcoeff{2}*exp(-3*h/70) + Bcoeff{3}*(h==0);
 
 
 end
 
 
 
+function Bcoeff = interpolate_B(Tlist, B, T1, T2)
+
+% interpolate the matrix B, recognizing that the diagonal of the matrix is
+% the peak
+
+% Find the interval containing each input period 
+index1 = find((Tlist<=T1),1,'last');
+index2 = find((Tlist<=T2),1,'last');
+
+% take just the adjacent cells of the B matrix
+T1vals = Tlist(index1:index1+1);
+T2vals = Tlist(index2:index2+1);
+Bvals = B(index1:index1+1, index2:index2+1);
+
+% interpolate along the diagonal
+Tavgtarg = mean([T1; T2]);
+
+Tavgvals = mean([T1vals; T2vals]);
+Bavgvals = diag(Bvals);
+Bdiagval = interp1(Tavgvals,Bavgvals,Tavgtarg);
+
+% then interpolate between the diagonal and the corner value of B
+Tdifftarg = abs(T1-T2);
+
+Tdiffvals = [0 abs(min(T1vals) - max(T1vals))];
+Bdiffvals = [Bdiagval Bvals(1,2)];
+Bcoeff = interp1(Tdiffvals, Bdiffvals, Tdifftarg);
+
+
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -154,8 +158,8 @@ end
 % Uncomment these and move them up in the function to reproduce the 
 % original paper's results.
 
-% % Table II. Short range coregionalization matrix, B1
-% B1=[0.30 0.24 0.23 0.22 0.16 0.07 0.03 0 0;
+% % Table II. Short range coregionalization matrix, B{1}
+% B{1}=[0.30 0.24 0.23 0.22 0.16 0.07 0.03 0 0;
 % 0.24 0.27 0.19 0.13 0.08 0 0 0 0;
 % 0.23 0.19 0.26 0.19 0.12 0.04 0 0 0;
 % 0.22 0.13 0.19 0.32 0.23 0.14 0.09 0.06 0.04;
@@ -165,8 +169,8 @@ end
 % 0 0 0 0.06 0.09 0.19 0.29 0.30 0.25;
 % 0 0 0 0.04 0.07 0.16 0.24 0.25 0.24];
 % 
-% % Table III. Long range coregionalization matrix, B2
-% B2=[0.31 0.26 0.27 0.24 0.17 0.11 0.08 0.06 0.05;
+% % Table III. Long range coregionalization matrix, B{2}
+% B{2}=[0.31 0.26 0.27 0.24 0.17 0.11 0.08 0.06 0.05;
 % 0.26 0.29 0.22 0.15 0.07 0 0 0 -0.03;
 % 0.27 0.22 0.29 0.24 0.15 0.09 0.03 0.02 0;
 % 0.24 0.15 0.24 0.33 0.27 0.23 0.17 0.14 0.14;
@@ -176,8 +180,8 @@ end
 % 0.06 0 0.02 0.14 0.19 0.29 0.42 0.47 0.47;
 % 0.05 -0.03 0 0.14 0.21 0.32 0.42 0.47 0.54];
 % 
-% % Table IV. Nugget effect coregionalization matrix, B3
-% B3=[0.38 0.36 0.35 0.17 0.04 0.04 0 0.03 0.08;
+% % Table IV. Nugget effect coregionalization matrix, B{3}
+% B{3}=[0.38 0.36 0.35 0.17 0.04 0.04 0 0.03 0.08;
 % 0.36 0.43 0.35 0.13 0 0.02 0 0.02 0.08;
 % 0.35 0.35 0.45 0.11 -0.04 -0.02 -0.04 -0.02 0.03;
 % 0.17 0.13 0.11 0.35 0.2 0.06 0.02 0.04 0.02;
