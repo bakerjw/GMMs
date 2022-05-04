@@ -6,6 +6,9 @@ function [median, sigma, period1] = cb_2014_active(T,rup,sitevar)
 %   changed from the PEER report to the Earthquake Spectra paper (thank you
 %   Yenan Cao for noting this)
 % Updated by Emily Mongold, 11/27/20
+% Modified on 5/3/22 by Emily Mongold to prevent estimating Ztor values
+%   within width and Zhyp calculations when user provided (thanks to Tom
+%   Son for noting this)
 %
 % Source Model:
 % Campbell, K. W., and Bozorgnia, Y. (2014). "NGA-West2 Ground Motion Model 
@@ -83,13 +86,13 @@ end
 W_empty_flag = 0;
 if isempty(rup.W)
     W_empty_flag = 1; % To set rup.W = [] at the end
-    if Frv == 1
-        Ztori = max(2.704 - 1.226*max(rup.M-5.849,0),0)^2;
-    else
-        Ztori = max(2.673 - 1.136*max(rup.M-4.970,0),0)^2;
-    end
-        rup.W = min(sqrt(10^((rup.M-4.07)/0.98)),(sitevar.Zbot - Ztori)/sin(pi/180*rup.delta));     
-        Zhyp = 9; 
+%     if Frv == 1
+%         Ztori = max(2.704 - 1.226*max(rup.M-5.849,0),0)^2;
+%     else
+%         Ztori = max(2.673 - 1.136*max(rup.M-4.970,0),0)^2;
+%     end
+        rup.W = min(sqrt(10^((rup.M-4.07)/0.98)),(sitevar.Zbot - Ztor)/sin(pi/180*rup.delta));     
+%         Zhyp = 9;
 end
 
 % if Zhyp is unknown...
@@ -106,15 +109,15 @@ if isempty(rup.Zhyp) && ~isempty(rup.W)
         fdZD = 0;
     end
 
-    if Frv == 1
-        Ztori = max(2.704 - 1.226*max(rup.M-5.849,0),0)^2;
-    else
-        Ztori = max(2.673 - 1.136*max(rup.M-4.970,0),0)^2;
-    end
+%     if Frv == 1
+%         Ztori = max(2.704 - 1.226*max(rup.M-5.849,0),0)^2;
+%     else
+%         Ztori = max(2.673 - 1.136*max(rup.M-4.970,0),0)^2;
+%     end
     
-    Zbor = Ztori + rup.W*sin(pi/180*rup.delta); % The depth to the bottom of the rupture plane
+    Zbor = Ztor + rup.W*sin(pi/180*rup.delta); % The depth to the bottom of the rupture plane
     d_Z = exp(min(fdZM+fdZD,log(0.9*(Zbor-Ztori))));
-    Zhyp = d_Z + Ztori;
+    Zhyp = d_Z + Ztor;
 else
     Zhyp = rup.Zhyp;
 end
@@ -442,5 +445,4 @@ tau = sqrt(tau_lnyB^2 + alpha^2*tau_lnPGAB^2 + 2*alpha*rlnPGA_lnY(ip)*tau_lnyB*t
 phi = sqrt(phi_lnyB^2 + flnAF(ip)^2 + alpha^2*phi_lnPGAB^2 + 2*alpha*rlnPGA_lnY(ip)*phi_lnyB*phi_lnPGAB);
 
 sigma=sqrt(tau^2+phi^2);
-
 
