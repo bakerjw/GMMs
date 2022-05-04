@@ -116,7 +116,7 @@ if isempty(rup.Zhyp) && ~isempty(rup.W)
 %     end
     
     Zbor = Ztor + rup.W*sin(pi/180*rup.delta); % The depth to the bottom of the rupture plane
-    d_Z = exp(min(fdZM+fdZD,log(0.9*(Zbor-Ztori))));
+    d_Z = exp(min(fdZM+fdZD,log(0.9*(Zbor-Ztor))));
     Zhyp = d_Z + Ztor;
 else
     Zhyp = rup.Zhyp;
