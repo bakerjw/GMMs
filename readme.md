@@ -67,6 +67,14 @@ The following correlation models are currently provided:
 | lb_2013_spatial_corr.m  |       y      |    y    | (Loth and Baker, 2013)     |
 | mcb_2018_spatial_corr.m |       y      |    y    | (Markhvida et   al., 2018) |
 
+Some additional functions are provided in the extra models folder:
+
+| Function               | Region             | Predicted metric               | Reference                                            |
+|------------------------|--------------------|--------------------------------|------------------------------------------------------|
+| ba_2019_EAS.m          | California/Nevada  | Fourier amplitude spectra      | (Bayless and Abrahamson, 2019))                      |
+
+
+
 Users desiring additional information, or looking for other GMMs, may find the following resources useful:
 - http://www.gmpe.org.uk/
 - https://www.risksciences.ucla.edu/nhr3/gmtools/
