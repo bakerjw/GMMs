@@ -3,6 +3,8 @@ function [median, sigma, period1] = bssa_2014_active(T, rup, site)
 % Created by Yue Hua, yuehua@stanford.edu
 % Modified by Jack Baker, 3/3/2014
 % Updated by Emily Mongold, 11/27/2020
+% Updated 6/6/2022 to correct a bug with the F_dz1 term. Resolution
+% identified by Jeff Bayless.
 % 
 % Source Model:
 % Boore, D. M., Stewart, J. P., Seyhan, E., and Atkinson, G. M. (2014). 
@@ -14,11 +16,6 @@ function [median, sigma, period1] = bssa_2014_active(T, rup, site)
 % standard devisations of average horizontal component internsity measures
 % (IMs) for shallow crustal earthquakes in active tectonic regions.
 %
-% NOTE: This file does not return the correct values for Vs30 = 270, global
-% region, and default Z10. The outputs of this script do not match the 
-% values in the spreadsheet, but the error was not identified as of 21 Jan 
-% 2021. The issue does not appear when region = 2, and does not affect
-% T<0.5s. 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INPUT
@@ -214,8 +211,8 @@ if Vs30~=v_ref || ip~=2
         if period(ip) <0.65
             F_dz1=0;
         else
-            if period(ip) >= 0.65 && abs(dz1) <= f7(ip)/f6(ip)
-                F_dz1=f6(ip)*dz1;
+            if dz1 <= f7(ip)/f6(ip)
+                F_dz1=f6(ip)*dz1; 
             else
                 F_dz1=f7(ip);
             end
