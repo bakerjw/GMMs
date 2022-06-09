@@ -74,6 +74,7 @@ Some additional functions are provided in the extra models folder:
 | ba_2019_EAS.m          | California/Nevada  | Fourier amplitude spectra      | (Bayless and Abrahamson, 2019))                      |
 
 
+## Further resources
 
 Users desiring additional information, or looking for other GMMs, may find the following resources useful:
 - http://www.gmpe.org.uk/
@@ -82,3 +83,7 @@ Users desiring additional information, or looking for other GMMs, may find the f
 - https://github.com/arkottke/pygmm/
 
 Note: Note these models were formerly referred to as "attenuation models," but the use of that name is being discouraged as it is misleading in what exactly these models provide. Users of these models should refer to them as "ground motion models." See http://daveboore.com/daves_notes/Thoughts%20on%20the%20acronyms%20GMPE,%20GMPM,%20and%20GMM.pdf
+
+## Acknowledgements
+
+Thanks to Kioumars Afshari, Jeff Bayless, James Bronder, Lynne Burks, Luis Ceferino, Reagan Chandramohan, Gemma Cremen, Abhineet Gupta, Yue Hua, Nirmal Jayaram, David Lallemant, Ting Lin, Christophe Loth, Maryia Markhvida, Lynne Schleiffarth, and Yoshifumi Yamamoto for their contributions that assisted with this effort. Thanks to Yilin Chen for advice regarding file structures.
