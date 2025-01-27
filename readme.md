@@ -82,7 +82,7 @@ Users desiring additional information, or looking for other GMMs, may find the f
 - https://github.com/gem/oq-engine/tree/master/openquake/hazardlib/gsim
 - https://github.com/arkottke/pygmm/
 
-Note: Note these models were formerly referred to as "attenuation models," but the use of that name is being discouraged as it is misleading in what exactly these models provide. Users of these models should refer to them as "ground motion models." See https://daveboore.com/daves_notes/Thoughts%20on%20the%20acronyms%20GMPE,%20GMPM,%20and%20GMM.pdf
+Note: Note these models were formerly referred to as "attenuation models," but the use of that name is being discouraged as it is misleading in what exactly these models provide. Users of these models should refer to them as "ground motion models." See https://daveboore.com/daves_notes/Thoughts%20on%20the%20acronyms%20GMPE,%20GMPM,%20and%20GMM.v2.pdf
 
 ## Acknowledgements
 
