@@ -3,6 +3,10 @@ function [median, sigma, period1] = as_2008_active(T,rup,site)
 % Created by Yoshifumi Yamamoto, 5/6/10, yama4423@stanford.edu
 % based on AS1997 by Jack W. Baker, 5/5/05, bakerjw@stanford.edu
 % Updated by Emily Mongold, 11/27/20
+% Updated by N. Simon Kwong, 1/10/26
+%
+%   updated 2026/01/10
+%          Fix handling of non-positive Ztor in T3 of f4 term
 %
 %   updated 2011/01/19
 %          Adjusted Hanging Wall term
@@ -213,10 +217,10 @@ function [f4] = f_4(Rjb, Rx, dip, Ztor, M, W, V)
     W1=W*cos(deg2rad(dip)); % Dip is in degrees
     if Rx<=W1
         T2=0.5+Rx/(2*W1);
-    elseif Rx>W1 | dip==90
+    elseif Rx>W1 || dip==90
         T2=1;
     end
-    if Rx>=Ztor
+    if Rx>=Ztor || Ztor<=0 % T3 set to unity if non-positive Ztor
         T3=1;
     else
         T3=Rx/Ztor;
