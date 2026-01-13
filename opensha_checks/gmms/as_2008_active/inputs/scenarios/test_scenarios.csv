@@ -1,0 +1,2 @@
+﻿scenario_id,M,Rrup,Rjb,Rx,dip,rake,Ztor,W,AS,HW,Vs30,fvs30,Z1P0,description
+pr1,6.5,10,10,-5,30,180,0,15,0,0,1100,0,0,Footwall rock; Rx<0; tests f4 term under negative Rx and 0 Ztor
