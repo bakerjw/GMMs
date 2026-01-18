@@ -1,0 +1,37 @@
+
+X-Axis: SA Period (sec)
+Y-Axis: Median SA (g)
+Number of Data Sets: 1
+
+
+DATASET #1
+
+Name: Abrahamson & Silva (2008)
+Num Points: 22
+Info: Magnitude = 6.5, Fault Type = Strike-Slip, Rupture Top Depth = 0.0, Dip = 30.0, Down-Dip Width = 15.0, Aftershock = false, Vs30 = 300.0, Depth 1.0 km/sec = 200.0, DistanceRup = 10.0, (distRup-distJB)/distRup = 0.0, (distRup-distX)/distRup = 0.5, Site on Hanging Wall = true
+
+X, Y Data:
+0.01	0.27888322
+0.02	0.28286928
+0.03	0.29739606
+0.04	0.30821103
+0.05	0.32594904
+0.075	0.38391438
+0.1	0.44857547
+0.15	0.54364806
+0.2	0.5805588
+0.25	0.5905183
+0.3	0.5667261
+0.4	0.5060931
+0.5	0.430089
+0.75	0.30106694
+1.0	0.22390585
+1.5	0.13359503
+2.0	0.09189978
+3.0	0.048790116
+4.0	0.030156996
+5.0	0.020154422
+7.5	0.007891796
+10.0	0.004054384
+
+
