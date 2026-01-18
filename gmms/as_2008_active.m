@@ -3,7 +3,10 @@ function [median, sigma, period1] = as_2008_active(T,rup,site)
 % Created by Yoshifumi Yamamoto, 5/6/10, yama4423@stanford.edu
 % based on AS1997 by Jack W. Baker, 5/5/05, bakerjw@stanford.edu
 % Updated by Emily Mongold, 11/27/20
-% Updated by N. Simon Kwong, 1/10/26
+% Updated by N. Simon Kwong, 1/10/26, 1/17/26
+%
+%   updated 2026/01/17
+%          Replace static e2 in f10 term with dynamic e2 to fix PGV
 %
 %   updated 2026/01/10
 %          Fix handling of non-positive Ztor in T3 of f4 term
@@ -12,7 +15,7 @@ function [median, sigma, period1] = as_2008_active(T,rup,site)
 %          Adjusted Hanging Wall term
 %          from the Errata for “AS NGA” model (http://apps.peer.berkeley.edu/products/abrahamson-silva_nga_report_files/AS08_NGA_errata.pdf)
 %          This version includes constant displacement effect
-
+%
 %   updated 2010/05/20
 %   updated 2009/05/05
 %
@@ -281,6 +284,7 @@ function [f8] = f_8(Rrup, M, V)
 
 function [f10] = f_10(Z10, Vs30, V)
 % value of f_10
+    % Calc median Z1.0 or "Z1.0 hat"
     if Vs30<180
         Z10h=exp(6.745);
     elseif Vs30<=500
@@ -288,16 +292,34 @@ function [f10] = f_10(Z10, Vs30, V)
     else
         Z10h=exp(5.394-4.48*log(Vs30/500));
     end
+
+    % Calc dynamic e2 here
+    if V.period == -1 % For PGV, use T=1.0 sec per EQS paper after Eq 20
+        e2 = -0.25*log(Vs30/1000)*log(1.0/0.35);
+    elseif V.period<0
+        error('Invalid spectral period.');
+    elseif Vs30>1000 || V.period<0.35 % This condition applies also to PGA
+        e2 = 0;
+    elseif V.period>2
+        e2 = -0.25*log(Vs30/1000)*log(2.0/0.35);
+    else
+        e2 = -0.25*log(Vs30/1000)*log(V.period/0.35);
+    end
+
+    % Define helper vars
     a211=(V.a10+V.b*V.n)*log(V.Vs30s/min(V.v1,1000));
     a212=log((Z10+V.c2)/(Z10h+V.c2));
+
+    % Use dynamic e2 to get a21
     if Vs30>=1000
         a21=0;
-    elseif a211+V.e2*a212<0
+    elseif a211+e2*a212<0 
         a21=-a211/a212;
     else
-        a21=V.e2;
+        a21=e2;
     end
     
+    % Calc f10 term
     f10=a21*a212;
     if Z10>=200
         f10=f10+V.a22*log(Z10/200);
