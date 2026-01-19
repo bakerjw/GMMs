@@ -5,7 +5,7 @@
 %
 % Run version of MATLAB function before PR2 fix; use Git to point
 % to the specific version before running MATLAB.
-% Load IMTs and PR1 scenario, run MATLAB function, and write results.
+% Load IMTs and PR2 scenario, run MATLAB function, and write results.
 clear; clc;
 
 %% Parameters

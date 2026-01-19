@@ -3,7 +3,11 @@ function [median, sigma, period1] = as_2008_active(T,rup,site)
 % Created by Yoshifumi Yamamoto, 5/6/10, yama4423@stanford.edu
 % based on AS1997 by Jack W. Baker, 5/5/05, bakerjw@stanford.edu
 % Updated by Emily Mongold, 11/27/20
-% Updated by N. Simon Kwong, 1/10/26, 1/17/26
+% Updated by N. Simon Kwong, 1/10/26, 1/17/26, 1/18/26
+%
+%   updated 2026/01/18
+%          Replace static vs30star in f5 and f10 terms with dynamic
+%          vs30star to fix constant displacement model
 %
 %   updated 2026/01/17
 %          Replace static e2 in f10 term with dynamic e2 to fix PGV
@@ -253,11 +257,23 @@ function [f4] = f_4(Rjb, Rx, dip, Ztor, M, W, V)
 
 function [f5] = f_5(pga_rock, Vs30, V)
 % value of f_5
-if Vs30 < V.lin
-    f5 = V.a10 * log(V.Vs30s/V.lin) - V.b*log(pga_rock+V.c) + V.b*log(pga_rock+V.c*((V.Vs30s/V.lin)^V.n));
-else
-    f5 = (V.a10 + V.b*V.n) * log(V.Vs30s/V.lin);
-end
+    % Calc dynamic vs30star here
+    if Vs30<V.v1
+        vs30star = Vs30;
+    else
+        vs30star = V.v1;
+    end
+
+    % Define helper var
+    ratioV = vs30star / V.lin;
+
+    % Calc f5 term using dynamic vs30star
+    if Vs30 < V.lin
+        f5 = V.a10 * log(ratioV) - V.b*log(pga_rock+V.c) + V.b*log(pga_rock+V.c*((ratioV)^V.n));
+    else
+        f5 = (V.a10 + V.b*V.n) * log(ratioV);
+    end
+
 
 function [f6] = f_6(Ztor, V)
 % value of f_6
@@ -306,8 +322,15 @@ function [f10] = f_10(Z10, Vs30, V)
         e2 = -0.25*log(Vs30/1000)*log(V.period/0.35);
     end
 
+    % Calc dynamic vs30star here
+    if Vs30<V.v1
+        Vs30star = Vs30;
+    else
+        Vs30star = V.v1;
+    end
+
     % Define helper vars
-    a211=(V.a10+V.b*V.n)*log(V.Vs30s/min(V.v1,1000));
+    a211=(V.a10+V.b*V.n)*log(Vs30star/min(V.v1,1000)); % Use dynamic vs30star here
     a212=log((Z10+V.c2)/(Z10h+V.c2));
 
     % Use dynamic e2 to get a21

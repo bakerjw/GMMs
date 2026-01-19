@@ -1,21 +1,21 @@
-% run_pr2_f10_after.m
+% run_pr3_f5_f10_after.m
 % 
 % This script should reside in:
 % opensha_checks/gmms/as_2008_active/matlab_runners/
 %
-% Run version of MATLAB function after PR2 fix; use Git to point
+% Run version of MATLAB function after PR3 fix; use Git to point
 % to the specific version before running MATLAB.
-% Load IMTs and PR2 scenario, run MATLAB function, and write results.
+% Load IMTs and PR3 scenario, run MATLAB function, and write results.
 clear; clc;
 
 %% Parameters
-PR_str = 'pr2'; % Which PR-specific input test files?
+PR_str = 'pr3'; % Which PR-specific input test files?
 
 %% Paths
 repo_root = '../../../../';
 dir_implementation = fullfile(repo_root, 'gmms'); % Corresponds to Git hash
 dir_tests = fullfile(repo_root, 'opensha_checks', 'gmms', 'as_2008_active');
-dir_output = fullfile(dir_tests, 'outputs_matlab', 'pr2_f10_after');
+dir_output = fullfile(dir_tests, 'outputs_matlab', 'pr3_f5_f10_after');
 if ~exist(dir_output, 'dir'); mkdir(dir_output); end
 
 file_IMTs = fullfile(dir_tests, 'inputs', 'IMTs', 'as2008_IMTs.csv');
